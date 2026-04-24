@@ -8,8 +8,8 @@ export default defineConfig({
   server: {
     host: true,
   },
-  // base: '/async-page-transitions/',
-  base: '/',
+  base: '/async-page-transitions/',
+  // base: '/',
   build: {
     // https://docs.astro.build/en/reference/configuration-reference/#buildformat
     format: 'preserve',
