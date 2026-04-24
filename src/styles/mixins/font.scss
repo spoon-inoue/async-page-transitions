@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'Inconsolata';
-  src: url('/src/assets/fonts/Inconsolata-VariableFont_wdth,wght.ttf');
+  src: url('src/assets/fonts/Inconsolata-VariableFont_wdth,wght.ttf'), url('/src/assets/fonts/Inconsolata-VariableFont_wdth,wght.ttf');
 }
 
 @mixin inconsolata($weight: 350) {
