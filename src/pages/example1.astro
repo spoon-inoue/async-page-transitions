@@ -1,0 +1,15 @@
+---
+import '@components/StylesBundler.astro'
+import Layout from '@layouts/Layout.astro'
+import Heading from '@components/example1/Heading.astro'
+import Code from '@components/example1/Code.astro'
+import Url from '@components/example1/Url.astro'
+---
+
+<Layout namespace="example1">
+  <title slot="title">Example1 | Async Page Transitions</title>
+
+  <Heading />
+  <Code />
+  <Url />
+</Layout>

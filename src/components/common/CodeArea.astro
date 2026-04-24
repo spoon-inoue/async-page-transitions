@@ -1,0 +1,30 @@
+<code-area>
+  <pre><code><slot /></code></pre>
+</code-area>
+
+<style lang="scss" is:global>
+  @use '/src/styles/mixins/media.scss' as *;
+  @use '/src/styles/mixins/font.scss';
+
+  code-area {
+    display: block;
+    background: #282c34;
+    padding: 20px 30px;
+    color: #aaa;
+    border-radius: 5px;
+    @include sp {
+      padding: 15px 20px;
+    }
+
+    pre {
+      code {
+        white-space: pre-wrap;
+        @include font.inconsolata;
+        font-size: 16px;
+        @include sp {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+</style>

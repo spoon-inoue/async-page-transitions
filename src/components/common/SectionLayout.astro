@@ -1,0 +1,40 @@
+---
+interface Props {
+  title: string
+}
+
+const { title } = Astro.props
+---
+
+<section>
+  <h2>{title}</h2>
+  <slot />
+</section>
+
+<style lang="scss" is:global>
+  @use '/src/styles/mixins/media.scss' as *;
+
+  section {
+    margin-top: 30px;
+
+    h2 {
+      font-size: 25px;
+      @include sp {
+        font-size: 22px;
+      }
+      &::after {
+        content: ':';
+      }
+
+      + * {
+        margin-top: 10px;
+      }
+    }
+
+    a {
+      color: #557fbb;
+      display: inline-block;
+      text-decoration: underline;
+    }
+  }
+</style>

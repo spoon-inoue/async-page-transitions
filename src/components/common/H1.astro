@@ -1,0 +1,15 @@
+<h1><slot /></h1>
+
+<style lang="scss" is:global>
+  @use '/src/styles/mixins/media.scss' as *;
+
+  h1 {
+    font-size: 40px;
+    @include sp {
+      font-size: 30px;
+    }
+    &::after {
+      content: ';';
+    }
+  }
+</style>

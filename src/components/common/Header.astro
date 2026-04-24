@@ -1,0 +1,53 @@
+<global-header>
+  <header>
+    <a href="/">Home</a>
+    <a href="/example1">Example1</a>
+    <a href="/example2">Example2</a>
+    <a href="/nest/example3">Example3</a>
+  </header>
+</global-header>
+
+<style lang="scss" is:global>
+  @use '/src/styles/functions/color.scss';
+  @use '/src/styles/mixins/media.scss' as *;
+
+  header {
+    position: fixed;
+    z-index: 10;
+    top: 10px;
+    left: 50%;
+    translate: -50% 0;
+    padding: 8px 15px;
+    background: color-mix(in srgb, color.$light, transparent 60%);
+    backdrop-filter: blur(5px);
+    border-radius: 5px;
+    border: 1px solid color-mix(in srgb, color.$light, color.$dark 10%);
+    display: flex;
+    gap: 10px;
+    a {
+      position: relative;
+      font-size: 14px;
+
+      @include hoverable {
+        &::before {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 1px;
+          background: currentColor;
+          transform-origin: right center;
+          scale: 0 1;
+          transition: scale 0.3s ease;
+        }
+        &:hover {
+          &::before {
+            transform-origin: left center;
+            scale: 1 1;
+          }
+        }
+      }
+    }
+  }
+</style>
