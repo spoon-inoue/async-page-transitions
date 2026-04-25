@@ -1,0 +1,15 @@
+---
+import CodeArea from '@components/common/CodeArea.astro'
+import SectionLayout from '@components/common/SectionLayout.astro'
+import type { Data } from './datas'
+
+interface Props {
+  data: Data
+}
+
+const { data } = Astro.props
+---
+
+<SectionLayout title="Code">
+  <CodeArea>{data.code}</CodeArea>
+</SectionLayout>

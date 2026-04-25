@@ -1,25 +1,19 @@
+import { Loader, type Content } from './Loader'
 import pathbrowserify from 'path-browserify'
-import type { Page } from './pages/Page'
 
-type Routes = { [key in string]: Page }
+export class Router extends Loader {
+  transition?: (currentContent: Content, nextContent: Content) => void
+  afterLeave?: (content: Content) => void
 
-export class Router {
-  transition?: (currentPage: Page, nextPage: Page) => void
-  afterLeave?: (page: Page) => void
-
-  private currentPage: Page
   private isTransitioning = false
+  private currentPath: string
 
-  constructor(private readonly routes: Routes) {
-    this.currentPage = this.getInitPage()
+  constructor(...namespaces: string[]) {
+    super(...namespaces)
+
+    this.currentPath = '/' + location.pathname.replace(import.meta.env.BASE_URL, '')
+    this.load(this.currentPath, { init: true })
     this.init()
-  }
-
-  private getInitPage() {
-    const path = '/' + location.pathname.replace(import.meta.env.BASE_URL, '')
-    const route = this.routes[path]
-    route.load({ init: true })
-    return route
   }
 
   private init() {
@@ -43,7 +37,7 @@ export class Router {
       this.navigate(path)
     })
 
-    window.addEventListener('popstate', (e) => {
+    window.addEventListener('popstate', () => {
       if (!this.isTransitioning) {
         const path = '/' + location.pathname.replace(import.meta.env.BASE_URL, '')
         this.performTransition(path)
@@ -60,7 +54,7 @@ export class Router {
       if (!link || !link.href.startsWith(location.origin)) return
 
       const path = new URL(link.href).pathname
-      this.routes[path].load()
+      this.load(path)
     })
   }
 
@@ -79,31 +73,31 @@ export class Router {
     this.isTransitioning = true
 
     try {
-      const route = this.routes[path]
-
-      if (!route || this.currentPage.namespace === route.namespace) return
+      if (this.currentPath === path) return
 
       // load next element
-      await route.load()
-      const currentElement = this.currentPage.element
-      const nextElement = route.element
+      await this.load(path)
+      const currentContent = this.getLoadedContent(this.currentPath)!
+      const nextContent = this.getLoadedContent(path)!
 
       // append next element
       const transitionWrapper = document.querySelector<HTMLElement>('[data-transition="wrapper"]')!
-      transitionWrapper.appendChild(nextElement)
+      transitionWrapper.appendChild(nextContent.element)
 
       // set page title
-      document.querySelector<HTMLTitleElement>('title')!.innerText = route.pageTitle
+      if (nextContent.title) {
+        document.querySelector<HTMLTitleElement>('title')!.innerText = nextContent.title
+      }
 
       // transition
-      await this.transition?.(this.currentPage, route)
+      await this.transition?.(currentContent, nextContent)
 
       // remove current element
-      transitionWrapper.removeChild(currentElement)
+      transitionWrapper.removeChild(currentContent.element)
 
-      await this.afterLeave?.(route)
+      await this.afterLeave?.(nextContent)
 
-      this.currentPage = route
+      this.currentPath = path
     } finally {
       this.isTransitioning = false
     }

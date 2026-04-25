@@ -1,0 +1,29 @@
+---
+import Code from '@components/nest/[slug]/Code.astro'
+import { datas } from '@components/nest/[slug]/datas'
+import Heading from '@components/nest/[slug]/Heading.astro'
+import Url from '@components/nest/[slug]/Url.astro'
+import Layout from '@layouts/Layout.astro'
+import type { GetStaticPaths } from 'astro'
+
+export const getStaticPaths = (async () => {
+  const data = datas
+
+  return datas.map((data) => {
+    return {
+      params: { slug: data.slug },
+      props: { data },
+    }
+  })
+}) satisfies GetStaticPaths
+
+const { data } = Astro.props
+---
+
+<Layout namespace="dynamic-generated-page">
+  <title slot="title">{data.title} | Dynamic Generated Page | Async Page Transitions</title>
+
+  <Heading data={data} />
+  <Code data={data} />
+  <Url data={data} />
+</Layout>
