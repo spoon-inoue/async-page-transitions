@@ -2,14 +2,15 @@ import { Loader, type Content } from './Loader'
 import pathbrowserify from 'path-browserify'
 
 export class Router extends Loader {
-  transition?: (currentContent: Content, nextContent: Content) => void
-  afterLeave?: (content: Content) => void
+  before?: (currentContent: Content) => void
+  transitioning?: (currentContent: Content, nextContent: Content) => void
+  after?: (nextContent: Content) => void
 
   private isTransitioning = false
   private currentPath: string
 
-  constructor(...namespaces: string[]) {
-    super(...namespaces)
+  constructor() {
+    super()
 
     this.currentPath = '/' + location.pathname.replace(import.meta.env.BASE_URL, '')
     this.load(this.currentPath, { init: true })
@@ -75,9 +76,11 @@ export class Router extends Loader {
     try {
       if (this.currentPath === path) return
 
+      const currentContent = this.getLoadedContent(this.currentPath)!
+      await this.before?.(currentContent)
+
       // load next element
       await this.load(path)
-      const currentContent = this.getLoadedContent(this.currentPath)!
       const nextContent = this.getLoadedContent(path)!
 
       // append next element
@@ -89,13 +92,12 @@ export class Router extends Loader {
         document.querySelector<HTMLTitleElement>('title')!.innerText = nextContent.title
       }
 
-      // transition
-      await this.transition?.(currentContent, nextContent)
+      await this.transitioning?.(currentContent, nextContent)
 
       // remove current element
       transitionWrapper.removeChild(currentContent.element)
 
-      await this.afterLeave?.(nextContent)
+      await this.after?.(nextContent)
 
       this.currentPath = path
     } finally {
