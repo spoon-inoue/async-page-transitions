@@ -2,10 +2,10 @@ import pathbrowserify from 'path-browserify'
 
 export type Content = { element: HTMLElement; namespace: string; title?: string }
 
-type Cash = { [key in string]: Content }
+type Routes = { [path in string]: Content }
 
 export abstract class Loader {
-  private readonly cash: Cash = {}
+  private readonly routes: Routes = {}
 
   protected async load(path: string, params?: { reload?: boolean; init?: boolean }) {
     try {
@@ -19,7 +19,7 @@ export abstract class Loader {
         const element = document.querySelector<HTMLElement>('[data-transition="container"]')!
         const namespace = element.dataset.namespace ?? 'default'
 
-        this.addCash(path, { element, namespace, title })
+        this.addRoute(path, { element, namespace, title })
       } else if (!content || reload) {
         // 他ページ
         const url = new URL(pathbrowserify.join(import.meta.env.BASE_URL, path), location.origin)
@@ -37,23 +37,23 @@ export abstract class Loader {
         const element = temp.querySelector<HTMLElement>('[data-transition="container"]')!
         const namespace = element.dataset.namespace ?? 'default'
 
-        this.addCash(path, { element, namespace, title })
+        this.addRoute(path, { element, namespace, title })
       }
     } catch {
       console.error('Failed to load the page.', path)
     }
   }
 
-  private addCash(path: string, content: Content) {
-    if (!Object.hasOwn(this.cash, path)) {
-      Object.assign(this.cash, path)
+  private addRoute(path: string, content: Content) {
+    if (!Object.hasOwn(this.routes, path)) {
+      Object.assign(this.routes, path)
     }
-    this.cash[path] = content
+    this.routes[path] = content
   }
 
   protected getLoadedContent(path: string) {
-    if (Object.hasOwn(this.cash, path)) {
-      return this.cash[path]
+    if (Object.hasOwn(this.routes, path)) {
+      return this.routes[path]
     }
   }
 }
