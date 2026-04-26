@@ -12,10 +12,5 @@ export function defaultTransition(current: HTMLElement, next: HTMLElement) {
   tl.fromTo(current, { scale: 1, '--transparent': '100%' }, { scale: media.isPc ? 0.9 : 0.85, '--transparent': '50%', duration: 0.8, ease: 'power2.inOut' })
   tl.fromTo(current, { y: -scrollY }, { y: -scrollY - window.innerHeight * 0.5, duration: 1, ease: 'power1.inOut' }, 0)
   tl.fromTo(next, { y: window.innerHeight }, { y: 0, duration: 0.8, ease: 'power1.inOut' }, 0)
-  tl.eventCallback('onComplete', () => {
-    tl.revert()
-    current.classList.remove('transition')
-  })
-
   return tl
 }

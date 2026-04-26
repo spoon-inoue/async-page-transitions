@@ -76,12 +76,13 @@ export class Router extends Loader {
     try {
       if (this.currentPath === path) return
 
-      const currentContent = this.getLoadedContent(this.currentPath)!
+      let currentContent = this.getLoadedContent(this.currentPath)!
+      currentContent = { ...currentContent, element: document.querySelector<HTMLElement>(`[data-namespace=${currentContent.namespace}]`)! }
       await this.before?.(currentContent)
 
       // load next element
       await this.load(path)
-      const nextContent = this.getLoadedContent(path)!
+      const nextContent = this.getLoadedContent(path, { cloneElement: true })!
 
       // append next element
       const transitionWrapper = document.querySelector<HTMLElement>('[data-transition="wrapper"]')!

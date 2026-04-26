@@ -19,7 +19,7 @@ export abstract class Loader {
         const element = document.querySelector<HTMLElement>('[data-transition="container"]')!
         const namespace = element.dataset.namespace ?? 'default'
 
-        this.addRoute(path, { element, namespace, title })
+        this.addRoute(path, { element: this.cloneElement(element), namespace, title })
       } else if (!content || reload) {
         // 他ページ
         const url = new URL(pathbrowserify.join(import.meta.env.BASE_URL, path), location.origin)
@@ -51,9 +51,20 @@ export abstract class Loader {
     this.routes[path] = content
   }
 
-  protected getLoadedContent(path: string) {
+  private cloneElement(element: HTMLElement) {
+    return <HTMLElement>(<Node>element.cloneNode(true))
+  }
+
+  protected getLoadedContent(path: string, params?: { cloneElement?: boolean }): Content | null {
     if (Object.hasOwn(this.routes, path)) {
-      return this.routes[path]
+      const cloneElement = params?.cloneElement ?? false
+      if (cloneElement) {
+        const route = this.routes[path]
+        return { ...route, element: this.cloneElement(route.element) }
+      } else {
+        return this.routes[path]
+      }
     }
+    return null
   }
 }
