@@ -4,4 +4,6 @@ export abstract class Page {
   log() {
     console.log(`this page is ${this.message}.`)
   }
+
+  define() {}
 }

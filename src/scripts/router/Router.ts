@@ -1,7 +1,7 @@
 import { Loader, type Content } from './Loader'
 import pathbrowserify from 'path-browserify'
 
-export class Router extends Loader {
+class Router extends Loader {
   before?: (currentContent: Content) => void
   transitioning?: (currentContent: Content, nextContent: Content) => void
   after?: (nextContent: Content) => void
@@ -106,3 +106,5 @@ export class Router extends Loader {
     }
   }
 }
+
+export const router = new Router()
