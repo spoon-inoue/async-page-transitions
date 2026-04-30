@@ -1,5 +1,4 @@
 import { Loader, type Content } from './Loader'
-import pathbrowserify from 'path-browserify'
 
 class Router extends Loader {
   before?: (currentContent: Content) => void
@@ -38,7 +37,7 @@ class Router extends Loader {
       this.navigate(path)
     })
 
-    window.addEventListener('popstate', () => {
+    window.addEventListener('popstate', (e) => {
       if (!this.isTransitioning) {
         const path = '/' + location.pathname.replace(import.meta.env.BASE_URL, '')
         this.performTransition(path)
@@ -64,7 +63,7 @@ class Router extends Loader {
     if (this.isTransitioning || location.pathname === path) return
 
     // ページをリロードせずにURLを更新
-    history.pushState({}, '', pathbrowserify.join(import.meta.env.BASE_URL, path))
+    history.pushState({}, '', this.pathJoin(import.meta.env.BASE_URL, path))
 
     await this.performTransition(path)
   }

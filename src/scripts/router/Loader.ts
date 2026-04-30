@@ -1,5 +1,3 @@
-import pathbrowserify from 'path-browserify'
-
 export type Content = { element: HTMLElement; namespace: string; title?: string }
 
 type Routes = { [path in string]: Content }
@@ -22,7 +20,7 @@ export abstract class Loader {
         this.addRoute(path, { element: this.cloneElement(element), namespace, title })
       } else if (!content || reload) {
         // 他ページ
-        const url = new URL(pathbrowserify.join(import.meta.env.BASE_URL, path), location.origin)
+        const url = new URL(this.pathJoin(import.meta.env.BASE_URL, path), location.origin)
         let pathname = url.pathname
         pathname += pathname.endsWith('/') ? 'index.html' : '.html'
 
@@ -66,5 +64,22 @@ export abstract class Loader {
       }
     }
     return null
+  }
+
+  protected pathJoin(...paths: string[]) {
+    let path = ''
+    for (let i = 0; i < paths.length; i++) {
+      path += paths[i]
+      if (i < paths.length - 1) {
+        const hasEndSlash = path.endsWith('/')
+        const hasNextStartSlash = paths[i + 1].startsWith('/')
+        if (hasEndSlash && hasNextStartSlash) {
+          path = path.substring(0, path.length - 1)
+        } else if (!hasEndSlash && !hasNextStartSlash) {
+          path += '/'
+        }
+      }
+    }
+    return path
   }
 }
