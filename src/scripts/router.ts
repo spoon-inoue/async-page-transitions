@@ -2,7 +2,7 @@ type Content = { element: HTMLElement; namespace: string; title?: string }
 type Routes = { [path in string]: Content }
 
 // =====================================
-/** Loader */
+// MARK: Loader
 // =====================================
 abstract class Loader {
   private readonly routes: Routes = {}
@@ -87,7 +87,7 @@ abstract class Loader {
 }
 
 // =====================================
-/** Router */
+// MARK: Router
 // =====================================
 class Router extends Loader {
   before?: (currentContent: Content) => void
