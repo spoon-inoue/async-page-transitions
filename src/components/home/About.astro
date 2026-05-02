@@ -23,12 +23,10 @@ import SectionLayout from '../common/SectionLayout.astro'
 </SectionLayout>
 
 <style lang="scss" is:global>
-  @use '/src/styles/functions/color.scss';
-
   home-about {
     p {
       &::highlight(keyword) {
-        background-color: color-mix(in srgb, color.$dark, transparent 80%);
+        background-color: color-mix(in srgb, #f00, transparent 90%);
       }
     }
   }

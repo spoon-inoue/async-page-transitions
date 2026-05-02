@@ -21,7 +21,7 @@ export class About extends HTMLElement {
       currentNode = treeWalker.nextNode()
     }
 
-    const searchTexts = ['Inconsolata', 'monospace', 'monospaced', 'Consolas', 'programmer fonts']
+    const searchTexts = ['Inconsolata', 'monospace font', 'programmer fonts', 'variable font family']
 
     const ranges: Range[] = []
     for (const searchText of searchTexts) {

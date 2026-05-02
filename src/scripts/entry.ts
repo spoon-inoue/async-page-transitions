@@ -5,7 +5,7 @@ import lenis from './modules/lenis'
 import './modules/scrollbar'
 import type { Page } from './page/Page'
 import * as P from './page/_'
-import { router } from './router/Router'
+import { router } from './router'
 import { defaultTransition } from './transition'
 
 Header.Define()
